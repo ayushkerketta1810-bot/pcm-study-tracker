@@ -1,1 +1,340 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#111318">
+<title>PCM Study Tracker</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#1d2027;color:#eee;font-family:Georgia,serif}
+header{background:#090a0e;padding:30px 22px}
+header h1{font-size:30px;margin:10px 0}
+header p{color:#c4c8dc;line-height:1.6}
+.banner{background:linear-gradient(110deg,#1749c7,#3979f5);padding:28px 22px}
+.banner h2{font-size:27px;margin:0 0 12px}
+main{padding:20px;max-width:1000px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{background:#111214;border:1px solid #42444c;border-radius:20px;padding:20px;margin-bottom:16px}
+.card h3{margin:0 0 18px;color:#d8dfff;font-size:18px}
+.big{font-size:34px;color:#91a8ff;margin:10px 0}
+.small{color:#aeb1c0;line-height:1.6}
+.progress{height:12px;background:#292d35;border-radius:20px;overflow:hidden;margin-top:12px}
+.progress span{display:block;height:100%;width:0;background:#497aff}
+.subject{margin:12px 0}
+.subject label{display:flex;justify-content:space-between;margin-bottom:7px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}
+button{background:#111318;color:#eee;border:1px solid #50535d;border-radius:12px;padding:12px 16px;font:inherit;cursor:pointer}
+button.active,.primary{background:#285de0;border-color:#6390ff}
+button:active{opacity:.75}
+.tab{display:none}
+.tab.show{display:block}
+select,input{background:#22252d;color:white;border:1px solid #555;border-radius:9px;padding:10px;font:inherit;max-width:100%}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:12px 0}
+.check{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #292c33;line-height:1.5}
+.check input{accent-color:#5483ff;width:19px;height:19px;flex-shrink:0;margin-top:3px}
+.subject-title{color:#a9bcff;margin-top:25px}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;min-width:760px;width:100%;font-size:13px}
+th,td{border:1px solid #42444c;padding:9px;text-align:center}
+th{background:#242a38}
+td:first-child{text-align:left;position:sticky;left:0;background:#17191e}
+table input{width:19px;height:19px;accent-color:#5483ff}
+.note{background:#20232b;padding:16px;border-radius:12px;line-height:1.8;color:#c5c8d5}
+.chapter{border:1px solid #41434c;border-radius:12px;padding:14px;margin:12px 0}
+.chapter h4{margin:0 0 8px;color:#dce2ff}
+footer{text-align:center;color:#999;padding:30px}
+@media(min-width:650px){.stats{grid-template-columns:repeat(4,1fr)}}
+@media print{body{background:white;color:black}.card{background:white;color:black;border:1px solid #aaa}button,.tabs{display:none!important}.tab{display:block!important}}
+</style>
+</head>
+<body>
+<header>
+<h1>PCM Study Tracker</h1>
+<p>18 November – 31 December 2026<br>Class XI Physics · Chemistry · Mathematics</p>
+</header>
+
+<div class="banner">
+<h2>MY PCM STUDY TRACKER</h2>
+<p>44 days of consistency, practice and progress.</p>
+</div>
+
+<main>
+<div class="stats">
+<div class="card">
+<h3>OVERALL COMPLETION</h3>
+<div class="big" id="percent">0%</div>
+<div class="progress"><span id="bar"></span></div>
+</div>
+<div class="card">
+<h3>TASKS COMPLETED</h3>
+<div class="big" id="done">0</div>
+<p class="small">Across all checklists</p>
+</div>
+<div class="card">
+<h3>TOTAL CHECKLIST ITEMS</h3>
+<div class="big" id="total">0</div>
+<p class="small">Daily and chapter tasks</p>
+</div>
+<div class="card">
+<h3>DAYS IN THE PLAN</h3>
+<div class="big">44</div>
+<p class="small">18 Nov – 31 Dec</p>
+</div>
+</div>
+
+<div class="card">
+<h3>SUBJECT COMPLETION</h3>
+<div id="subjectProgress"></div>
+</div>
+
+<div class="card">
+<h3>COMPLETION OVERVIEW</h3>
+<div class="big" id="overview">0%</div>
+<p class="small" id="overviewText">0 completed · 0 remaining</p>
+</div>
+
+<div class="card">
+<h3>WEEKLY PROGRESS</h3>
+<div id="weekly"></div>
+<p class="small">Percentage of checklist tasks completed in each week.</p>
+</div>
+
+<div class="card">
+<h3>NOTES & REMINDERS</h3>
+<div class="note">
+• Finish the lecture and understand the topic before ticking it off.<br>
+• Exercise – all questions means every question in that chapter.<br>
+• Complete miscellaneous questions wherever they appear in your NCERT edition.<br>
+• Save difficult questions for revision and chapter tests.<br>
+• Your progress is saved automatically on this device.
+</div>
+</div>
+
+<div class="tabs">
+<button class="active" onclick="showTab('daily',this)">Daily habit grid</button>
+<button onclick="showTab('chapters',this)">Chapter checklist</button>
+<button onclick="showTab('progress',this)">Daily progress</button>
+</div>
+
+<section id="daily" class="tab show">
+<div class="card">
+<h3>DAILY STUDY CHECKLIST — 44 DAYS</h3>
+<p class="small">Tick each subject when you complete its daily study target. Scroll horizontally to see all dates.</p>
+<div class="table-wrap">
+<table id="dailyTable"></table>
+</div>
+</div>
+</section>
+
+<section id="chapters" class="tab">
+<div class="card">
+<h3>CHAPTER-WISE CHECKLIST</h3>
+<p class="small">Tick the tasks as you complete each chapter. These are editable progress items, not a claim that every chapter is in your current school syllabus.</p>
+<div class="row">
+<select id="filter" onchange="renderChapters()">
+<option value="All">All subjects</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Mathematics</option>
+</select>
+</div>
+<div id="chapterList"></div>
+</div>
+</section>
+
+<section id="progress" class="tab">
+<div class="card">
+<h3>DAILY PROGRESS</h3>
+<p class="small">Your checked daily tasks are shown below.</p>
+<div id="dailySummary"></div>
+</div>
+</section>
+
+<div class="card">
+<h3>BACKUP & SETTINGS</h3>
+<div class="row">
+<button class="primary" onclick="window.print()">Print / Save as PDF</button>
+<button onclick="backup()">Export progress backup</button>
+<label class="primary" style="padding:12px;border-radius:12px;cursor:pointer">
+Import backup <input type="file" accept=".json" onchange="restore(event)" hidden>
+</label>
+<button onclick="resetAll()">Reset all progress</button>
+</div>
+<p class="small">Progress is saved locally in your browser. Export a backup before changing devices or clearing browser data.</p>
+</div>
+</main>
+
+<footer>PCM Study Tracker · Your progress, your journey.</footer>
+
+<script>
+const start = new Date(2026,10,18);
+const end = new Date(2026,11,31);
+const dates = [];
+for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)){
+ dates.push(new Date(d));
+}
+const subjects = {
+ Physics:[
+ "Units and Measurements","Motion in a Straight Line","Motion in a Plane",
+ "Laws of Motion","Work, Energy and Power",
+ "System of Particles and Rotational Motion","Gravitation",
+ "Mechanical Properties of Solids","Mechanical Properties of Fluids",
+ "Thermal Properties of Matter","Thermodynamics","Kinetic Theory",
+ "Oscillations","Waves"
+ ],
+ Chemistry:[
+ "Some Basic Concepts of Chemistry","Structure of Atom",
+ "Classification of Elements and Periodicity",
+ "Chemical Bonding and Molecular Structure",
+ "Chemical Thermodynamics","Equilibrium","Redox Reactions",
+ "Organic Chemistry: Basic Principles","Hydrocarbons"
+ ],
+ Mathematics:[
+ "Sets","Relations and Functions","Trigonometric Functions",
+ "Complex Numbers and Quadratic Equations","Linear Inequalities",
+ "Permutations and Combinations","Binomial Theorem",
+ "Sequences and Series","Straight Lines","Conic Sections",
+ "Introduction to Three Dimensional Geometry",
+ "Limits and Derivatives","Statistics","Probability"
+ ]
+};
+const tasks=[
+ "Complete lecture / understand concepts",
+ "NCERT examples",
+ "NCERT exercise – all questions",
+ "Miscellaneous questions",
+ "Revision of the chapter",
+ "Chapter test / practice questions"
+];
+let data={};
+try{data=JSON.parse(localStorage.getItem("pcmTracker")||"{}")}catch(e){data={}}
+function save(){
+ localStorage.setItem("pcmTracker",JSON.stringify(data));
+ update();
+}
+function checked(key){return !!data[key]}
+function toggle(key){
+ data[key]=!data[key];save();
+}
+function showTab(id,btn){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("show"));
+ document.getElementById(id).classList.add("show");
+ document.querySelectorAll(".tabs button").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+}
+function dateKey(d){
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function renderDaily(){
+ let html="<thead><tr><th>Date</th><th>Physics</th><th>Chemistry</th><th>Maths</th></tr></thead><tbody>";
+ dates.forEach(d=>{
+ let key=dateKey(d);
+ html+="<tr><td>"+d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"})+"</td>";
+ ["Physics","Chemistry","Mathematics"].forEach(s=>{
+ let k="day_"+key+"_"+s;
+ html+='<td><input type="checkbox" aria-label="'+s+" "+key+'" '+(checked(k)?"checked":"")+' onchange="toggle(\''+k+'\')"></td>';
+ });
+ html+="</tr>";
+ });
+ document.getElementById("dailyTable").innerHTML=html+"</tbody>";
+}
+function renderChapters(){
+ let filter=document.getElementById("filter").value;
+ let html="";
+ Object.entries(subjects).forEach(([subject,chapters])=>{
+ if(filter!=="All"&&filter!==subject)return;
+ html+='<h3 class="subject-title">'+subject+'</h3>';
+ chapters.forEach((chapter,i)=>{
+ let id=subject+"_"+i;
+ html+='<div class="chapter"><h4>'+chapter+'</h4>';
+ tasks.forEach((task,j)=>{
+ let k="chapter_"+id+"_"+j;
+ html+='<label class="check"><input type="checkbox" '+(checked(k)?"checked":"")+' onchange="toggle(\''+k+'\')">'+task+'</label>';
+ });
+ html+="</div>";
+ });
+ });
+ document.getElementById("chapterList").innerHTML=html;
+}
+function allKeys(){
+ let keys=[];
+ dates.forEach(d=>{
+ ["Physics","Chemistry","Mathematics"].forEach(s=>keys.push("day_"+dateKey(d)+"_"+s));
+ });
+ Object.entries(subjects).forEach(([s,chapters])=>{
+ chapters.forEach((c,i)=>tasks.forEach((t,j)=>keys.push("chapter_"+s+"_"+i+"_"+j)));
+ });
+ return keys;
+}
+function update(){
+ let keys=allKeys();
+ let done=keys.filter(checked).length;
+ let total=keys.length;
+ let pct=Math.round(done/total*100);
+ document.getElementById("percent").textContent=pct+"%";
+ document.getElementById("done").textContent=done;
+ document.getElementById("total").textContent=total;
+ document.getElementById("bar").style.width=pct+"%";
+ document.getElementById("overview").textContent=pct+"%";
+ document.getElementById("overviewText").textContent=done+" completed · "+(total-done)+" remaining";
+ let html="";
+ Object.keys(subjects).forEach(s=>{
+ let sk=keys.filter(k=>k.includes("_"+s+"_"));
+ let sd=sk.filter(checked).length;
+ let p=Math.round(sd/sk.length*100);
+ html+='<div class="subject"><label>'+s+' <span>'+p+'%</span></label><div class="progress"><span style="width:'+p+'%"></span></div></div>';
+ });
+ document.getElementById("subjectProgress").innerHTML=html;
+ let week="";
+ for(let i=0;i<dates.length;i+=7){
+ let weekDates=dates.slice(i,i+7);
+ let wk=weekDates.flatMap(d=>["Physics","Chemistry","Mathematics"].map(s=>"day_"+dateKey(d)+"_"+s));
+ let wd=wk.filter(checked).length;
+ let wp=Math.round(wd/wk.length*100);
+ week+='<div class="subject"><label>Week '+(Math.floor(i/7)+1)+' <span>'+wp+'%</span></label><div class="progress"><span style="width:'+wp+'%"></span></div></div>';
+ }
+ document.getElementById("weekly").innerHTML=week;
+ let summary="";
+ dates.forEach(d=>{
+ let key=dateKey(d);
+ let count=["Physics","Chemistry","Mathematics"].filter(s=>checked("day_"+key+"_"+s)).length;
+ summary+='<div class="check">'+d.toLocaleDateString("en-IN",{day:"2-digit",month:"long"})+' — '+count+'/3 subjects completed</div>';
+ });
+ document.getElementById("dailySummary").innerHTML=summary;
+}
+function backup(){
+ let blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+ let a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download="PCM_Study_Progress.json";
+ a.click();
+ URL.revokeObjectURL(a.href);
+}
+function restore(event){
+ let file=event.target.files[0];
+ if(!file)return;
+ let reader=new FileReader();
+ reader.onload=()=>{
+ try{
+ let obj=JSON.parse(reader.result);
+ if(!obj||typeof obj!=="object"||Array.isArray(obj))throw Error();
+ data=obj;save();renderDaily();renderChapters();
+ alert("Progress restored!");
+ }catch(e){alert("Invalid backup file.");}
+ };
+ reader.readAsText(file);
+}
+function resetAll(){
+ if(confirm("Are you sure? All saved progress on this browser will be erased.")){
+ data={};save();renderDaily();renderChapters();
+ }
+}
+renderDaily();
+renderChapters();
+update();
+</script>
+</body>
+  </html>
+
