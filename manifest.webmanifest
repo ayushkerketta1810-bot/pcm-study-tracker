@@ -1,0 +1,20 @@
+
+{
+  "name": "PCM Study Tracker",
+  "short_name": "PCM Tracker",
+  "description": "Class 11 Physics, Chemistry and Mathematics study tracker",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1d2027",
+  "theme_color": "#111318",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
